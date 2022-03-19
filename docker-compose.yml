@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  node:
+    image: node:16
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./:/srv/react-docker
+    working_dir: /srv/react-docker
+    command: 'yarn start'
