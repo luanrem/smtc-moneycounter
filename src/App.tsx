@@ -1,10 +1,21 @@
-import React from "react";
-import { Container } from "./styles";
+import { Container, Card } from "./styles";
+
+import StartStopButton from "./components/StartStopButton";
+
+import { AiOutlineArrowDown } from "react-icons/ai";
 
 function App() {
   return (
     <Container>
-      <h1>Test</h1>
+      {/* <div className="Limiter"> */}
+      {/* <header>This is a test</header> */}
+      <Card>
+        <span>
+          <AiOutlineArrowDown /> R$ 173.025,00
+        </span>
+        <StartStopButton>Start</StartStopButton>
+      </Card>
+      {/* </div> */}
     </Container>
   );
 }
