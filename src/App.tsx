@@ -9,17 +9,27 @@ import { IoMdSettings } from "react-icons/io";
 import { theme } from "./theme";
 import {
   Button,
-  Container,
   Flex,
   Heading,
   Image,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [money, setMoney] = useState(10000.0);
+  const [initialMoney, setInitialMoney] = useState(100000);
+  const [money, setMoney] = useState(initialMoney);
   const [isStarted, setIsStarted] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     let timer: NodeJS.Timer;
@@ -32,8 +42,16 @@ function App() {
   }, [money, isStarted]);
 
   const handleStopStart = () => {
-    console.log("chegou");
     setIsStarted(!isStarted);
+  };
+
+  const handleReload = () => {
+    setMoney(100000.0);
+  };
+
+  const handleChange = () => {
+    console.log("test");
+    onClose();
   };
 
   return (
@@ -54,7 +72,7 @@ function App() {
             alt="rocketseatLogo"
           />
           <Text
-            margin="0 0 0 2rem"
+            margin="0 0 2rem 2rem"
             color="blackAlpha.700"
             fontFamily="Encode Sans Expanded"
             fontSize="6xl"
@@ -72,10 +90,10 @@ function App() {
           justify="space-between"
         >
           <Flex color="gray.600" justifyContent="flex-end" h="2rem" w="auto">
-            <Button colorScheme="gray" variant="link">
+            <Button onClick={handleReload} colorScheme="gray" variant="link">
               <MdRefresh size="1.5rem" />
             </Button>
-            <Button colorScheme="gray" variant="link">
+            <Button onClick={onOpen} colorScheme="gray" variant="link">
               <IoMdSettings size="1.5rem" />
             </Button>
           </Flex>
@@ -117,6 +135,25 @@ function App() {
           <Flex h="2rem" />
         </Flex>
       </Flex>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent color="gray.700">
+          <ModalHeader>Counter Configuration</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <h1>This is a test</h1>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button onClick={handleChange} variant="ghost">
+              Change
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </ChakraProvider>
   );
 }
