@@ -19,6 +19,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  ScaleFade,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -63,7 +64,7 @@ function App() {
         align="center"
         justify="center"
       >
-        <Heading alignContent="flex-start" w="50rem">
+        <Heading alignContent="flex-start" w={[300, 400, 800]}>
           <Image
             margin="2rem 0 0 2rem"
             h="3rem"
@@ -75,15 +76,17 @@ function App() {
             margin="0 0 2rem 2rem"
             color="blackAlpha.700"
             fontFamily="Encode Sans Expanded"
-            fontSize="6xl"
+            fontSize={{ base: "4xl", lg: "6xl" }}
           >
             Money Counter
           </Text>
         </Heading>
         <Flex
           w="100%"
-          h="20rem"
-          maxWidth="50rem"
+          // h="20rem"
+          h={{ base: "18rem", lg: "20rem" }}
+          // maxWidth="50rem"
+          maxWidth={{ base: "90%", md: "80%", lg: "50rem" }}
           bg="whiteAlpha.900"
           borderRadius={8}
           flexDir="column"
@@ -99,7 +102,8 @@ function App() {
           </Flex>
           <Flex
             color="red.500"
-            fontSize="5rem"
+            // fontSize="5rem"
+            fontSize={{ base: "3rem", lg: "5rem" }}
             align="center"
             borderRadius={8}
             justify="space-evenly"
@@ -136,24 +140,26 @@ function App() {
         </Flex>
       </Flex>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent color="gray.700">
-          <ModalHeader>Counter Configuration</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <h1>This is a test</h1>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button onClick={handleChange} variant="ghost">
-              Change
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ScaleFade initialScale={0.9} in={isOpen}>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent color="gray.700">
+            <ModalHeader>Counter Configuration</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <h1>This is a test</h1>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button onClick={handleChange} variant="ghost">
+                Change
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </ScaleFade>
     </ChakraProvider>
   );
 }
