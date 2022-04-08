@@ -10,8 +10,14 @@ import { theme } from "./theme";
 import {
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
   Image,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,6 +26,7 @@ import {
   ModalHeader,
   ModalOverlay,
   ScaleFade,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -27,6 +34,11 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [initialMoney, setInitialMoney] = useState(100000);
+  const [inputInitialMoney, setInputInitialMoney] = useState(
+    String(initialMoney)
+  );
+  const [moneyPerSec, setMoneyPerSec] = useState(1000);
+  const [inputMoneyPerSec, setInputMoneyPerSec] = useState(String(moneyPerSec));
   const [money, setMoney] = useState(initialMoney);
   const [isStarted, setIsStarted] = useState(false);
 
@@ -35,23 +47,32 @@ function App() {
   useEffect(() => {
     let timer: NodeJS.Timer;
     if (isStarted) {
-      timer = setInterval(() => setMoney(money - 1000), 1000);
+      timer = setInterval(() => setMoney(money - moneyPerSec), 1000);
     } else {
       timer = setInterval(() => setMoney(money - 0), 1000);
     }
     return () => clearInterval(timer);
-  }, [money, isStarted]);
+  }, [money, isStarted, moneyPerSec]);
 
   const handleStopStart = () => {
     setIsStarted(!isStarted);
   };
 
-  const handleReload = () => {
-    setMoney(100000.0);
+  const handleChange = () => {
+    setInitialMoney(parseFloat(inputInitialMoney));
+    setMoney(parseFloat(inputInitialMoney));
+    setMoneyPerSec(parseFloat(inputMoneyPerSec));
+    onClose();
   };
 
-  const handleChange = () => {
-    console.log("test");
+  const handleOpenSettings = () => {
+    setIsStarted(false);
+    onOpen();
+  };
+
+  const handleClose = () => {
+    setInputInitialMoney(String(initialMoney));
+    setInputMoneyPerSec(String(moneyPerSec));
     onClose();
   };
 
@@ -83,9 +104,7 @@ function App() {
         </Heading>
         <Flex
           w="100%"
-          // h="20rem"
           h={{ base: "18rem", lg: "20rem" }}
-          // maxWidth="50rem"
           maxWidth={{ base: "90%", md: "80%", lg: "50rem" }}
           bg="whiteAlpha.900"
           borderRadius={8}
@@ -93,38 +112,50 @@ function App() {
           justify="space-between"
         >
           <Flex color="gray.600" justifyContent="flex-end" h="2rem" w="auto">
-            <Button onClick={handleReload} colorScheme="gray" variant="link">
+            <Button
+              onClick={() => setMoney(initialMoney)}
+              colorScheme="gray"
+              variant="link"
+            >
               <MdRefresh size="1.5rem" />
             </Button>
-            <Button onClick={onOpen} colorScheme="gray" variant="link">
+            <Button
+              onClick={handleOpenSettings}
+              colorScheme="gray"
+              variant="link"
+            >
               <IoMdSettings size="1.5rem" />
             </Button>
           </Flex>
           <Flex
             color="red.500"
-            // fontSize="5rem"
             fontSize={{ base: "3rem", lg: "5rem" }}
             align="center"
             borderRadius={8}
             justify="space-evenly"
+            wordBreak="break-all"
             flexWrap="wrap"
           >
-            <AiOutlineArrowDown />
-            <NumberFormat
-              value={money}
-              prefix="R$"
-              type="text"
-              thousandsGroupStyle="thousand"
-              decimalSeparator="."
-              displayType="text"
-              thousandSeparator={true}
-              allowNegative={true}
-              decimalScale={0}
-              fixedDecimalScale={true}
-              isNumericString={false}
-              allowLeadingZeros={true}
-            />
+            <Flex align="center">
+              {money < 0 ? <MdLocalFireDepartment /> : <AiOutlineArrowDown />}
+
+              <NumberFormat
+                value={money}
+                prefix="R$"
+                type="text"
+                thousandsGroupStyle="thousand"
+                decimalSeparator="."
+                displayType="text"
+                thousandSeparator={true}
+                allowNegative={true}
+                decimalScale={0}
+                fixedDecimalScale={true}
+                isNumericString={false}
+                allowLeadingZeros={true}
+              />
+            </Flex>
             <Button
+              margin="2rem 0"
               leftIcon={<MdLocalFireDepartment />}
               name="StartOrPause"
               colorScheme="purple"
@@ -140,17 +171,58 @@ function App() {
         </Flex>
       </Flex>
 
-      <ScaleFade initialScale={0.9} in={isOpen}>
-        <Modal isOpen={isOpen} onClose={onClose}>
+      <ScaleFade initialScale={1} in={isOpen}>
+        <Modal isOpen={isOpen} onClose={handleClose}>
           <ModalOverlay />
           <ModalContent color="gray.700">
             <ModalHeader>Counter Configuration</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <h1>This is a test</h1>
+              <Flex as="form" flexDir="column">
+                <Stack spacing="4">
+                  <FormControl>
+                    <FormLabel htmlFor="initialMoney">Initial Money</FormLabel>
+                    <InputGroup>
+                      <InputLeftAddon boxSize="mg" children="R$" />
+                      <Input
+                        focusBorderColor="pink.500"
+                        id="initialMoney"
+                        name="initialMoney"
+                        type="number"
+                        bg="gray.100"
+                        size="lg"
+                        value={inputInitialMoney}
+                        onChange={(event) =>
+                          setInputInitialMoney(event.target.value)
+                        }
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel htmlFor="moneyPerSecond">
+                      Money per sec
+                    </FormLabel>
+                    <InputGroup>
+                      <Input
+                        focusBorderColor="pink.500"
+                        id="moneyPerSecond"
+                        name="moneyPerSecond"
+                        type="number"
+                        bg="gray.100"
+                        size="lg"
+                        value={inputMoneyPerSec}
+                        onChange={(event) =>
+                          setInputMoneyPerSec(event.target.value)
+                        }
+                      />
+                      <InputRightAddon children="R$/s" boxSize="mg" />
+                    </InputGroup>
+                  </FormControl>
+                </Stack>
+              </Flex>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
+              <Button colorScheme="blue" mr={3} onClick={handleClose}>
                 Close
               </Button>
               <Button onClick={handleChange} variant="ghost">
