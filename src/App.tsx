@@ -135,6 +135,7 @@ function App() {
             justify="space-evenly"
             wordBreak="break-all"
             flexWrap="wrap"
+            flexDir={{ base: "column", lg: "row" }}
           >
             <Flex align="center">
               {money < 0 ? <MdLocalFireDepartment /> : <AiOutlineArrowDown />}
