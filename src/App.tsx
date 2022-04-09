@@ -170,6 +170,12 @@ function App() {
           </Flex>
           <Flex h="2rem" />
         </Flex>
+        <Flex>
+          <h1>
+            Follow me:{" "}
+            <a href="https://github.com/luanrem">github.com/luanrem</a>
+          </h1>
+        </Flex>
       </Flex>
 
       <ScaleFade initialScale={1} in={isOpen}>
